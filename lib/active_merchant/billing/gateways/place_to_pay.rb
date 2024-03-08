@@ -28,6 +28,12 @@ module ActiveMerchant #:nodoc:
         add_auth(post, options)
         add_payer(post, options)
         add_payment(post, options)
+
+        _3dsResponse = add_3d_secure(post, payment, options);
+
+        options[:identifier] = JSON.parse(_3dsResponse.params.to_json, object_class: OpenStruct).data.identifier;
+        options[:sessionToken] = JSON.parse(_3dsResponse.params.to_json, object_class: OpenStruct).data.sessionToken;
+
         add_instrument(post, payment, options)
         commit(:post, 'gateway/process', post)
       end
@@ -147,7 +153,22 @@ module ActiveMerchant #:nodoc:
         post[:instrument] = options[:instrument]
         post[:instrument][:card][:number] = payment.number;
         post[:instrument][:card][:expiration] = (payment.month).to_s + "/" + (payment.year).to_s;
-        post[:instrument][:card][:cvv] = payment.verification_value;        
+        post[:instrument][:card][:cvv] = payment.verification_value; 
+
+        post[:instrument][:threeDS] = {}
+        #post[:instrument][:threeDS][:id] = options[:sessionToken]
+        
+      end
+
+      def add_3d_secure(post, payment, options)
+        post = {}
+        add_auth(post, options)
+        add_payment(post, options)
+        add_instrument(post, payment, options)
+        post[:returnUrl] = "https://www.your-site.com/return?reference=1234567890"
+        #@response = commit(:post, 'gateway/mpi/lookup', post)
+        commit(:post, 'gateway/mpi/lookup', post)
+        # return @response
       end
 
       def add_amount(post, payment, options)
