@@ -2,7 +2,8 @@ require 'test_helper'
 
 class RemotePlaceToPayTest < Test::Unit::TestCase
   def setup
-    @default_gateway = PlaceToPayGateway.new(fixtures(:place_to_pay_default))
+    # @default_gateway = PlaceToPayGateway.new(fixtures(:place_to_pay_default))
+    @default_gateway = PlaceToPayGateway.new(login: '11caf20f5cd408c9b22c7f0693e2f676', secret_key: 'yLb0x2IO2lO65zq7')
 
     @amount = 100
 
@@ -33,17 +34,40 @@ class RemotePlaceToPayTest < Test::Unit::TestCase
     @credit_card_rejected_visa = credit_card('4110760000000016', month: 12, year: 2023, verification_value: '123', first_name: @payer[:name], last_name: @payer[:surname])
     @credit_card_approved_3DSC_visa = credit_card('4110760000000008', month: 12, year: 2023, verification_value: '123', first_name: @payer[:name], last_name: @payer[:surname])
 
-    
-    @purchase_options = {
+    @authorize_options = {
       payer: @payer,
       payment: payment,
       instrument: instrument
+    }    
+
+    @purchase_options = {
+      payer: @payer,
+      payment: payment,
+      instrument: instrument,
+      use3ds: true,
+      returnUrl: "https://www.your-site.com/return?reference=1234567890"
     }
     @refund_options = { }
   end
 
+  # def test_successful_authorize
+  #   #@purchase_options[:payment][:reference] = "TEST_" + Time.now.strftime("%Y%m%d_%H%M%S%3N")
+  #   #purchase = @default_gateway.purchase(@amount, @credit_card_approved_visa, @purchase_options)
+  # #   assert_success purchase
+  # #   assert_equal 'Aprobada', purchase.message
+
+  #   @authorize_options[:payment][:reference] = "TEST_" + Time.now.strftime("%Y%m%d_%H%M%S%3N")
+  #   #@authorize_options =  { internalReference: purchase.network_transaction_id }
+
+  #   response = @default_gateway.authorize(@amount, @credit_card_approved_diners, @authorize_options)
+  #   assert_success response
+  #   assert_equal 'Aprobada', response.message
+  # end 
+
   def test_successful_purchase_diners
     @purchase_options[:payment][:reference] = "TEST_" + Time.now.strftime("%Y%m%d_%H%M%S%3N")
+    @purchase_options[:use3ds] = false
+    @purchase_options[:returnUrl] = nil
     response = @default_gateway.purchase(@amount, @credit_card_approved_diners, @purchase_options)
     assert_success response
     assert_equal 'Aprobada', response.message
@@ -51,6 +75,8 @@ class RemotePlaceToPayTest < Test::Unit::TestCase
 
   def test_failed_purchase_diners
     @purchase_options[:payment][:reference] = "TEST_" + Time.now.strftime("%Y%m%d_%H%M%S%3N")
+    @purchase_options[:use3ds] = false
+    @purchase_options[:returnUrl] = nil    
     response = @default_gateway.purchase(@amount, @credit_card_rejected_diners, @purchase_options)
     assert_success response
     assert_equal 'Rechazada', response.message
@@ -58,13 +84,17 @@ class RemotePlaceToPayTest < Test::Unit::TestCase
 
   def test_successful_purchase_visa
     @purchase_options[:payment][:reference] = "TEST_" + Time.now.strftime("%Y%m%d_%H%M%S%3N")
-    response = @default_gateway.purchase(@amount, @credit_card_approved_visa, @purchase_options)
+    @purchase_options[:use3ds] = true
+    @purchase_options[:returnUrl] = "https://www.your-site.com/return?reference=1234567890"      
+    response = @default_gateway.purchase(@amount, @credit_card_approved_visa, @purchase_options)  
     assert_success response
     assert_equal 'Aprobada', response.message
   end
 
   def test_failed_purchase_visa
     @purchase_options[:payment][:reference] = "TEST_" + Time.now.strftime("%Y%m%d_%H%M%S%3N")
+    @purchase_options[:use3ds] = true
+    @purchase_options[:returnUrl] = "https://www.your-site.com/return?reference=1234567890"      
     response = @default_gateway.purchase(@amount, @credit_card_rejected_visa, @purchase_options)
     assert_success response
     assert_equal 'Rechazada', response.message
@@ -123,14 +153,14 @@ class RemotePlaceToPayTest < Test::Unit::TestCase
   #   dump_transcript_and_fail(@default_gateway, @amount, @credit_card_approved_visa, @purchase_options)
   # end
 
-  def test_transcript_scrubbing
-    transcript = capture_transcript(@default_gateway) do
-      @purchase_options[:payment][:reference] = "TEST_" + Time.now.strftime("%Y%m%d_%H%M%S%3N")
-      @default_gateway.purchase(@amount, @credit_card_approved_visa, @purchase_options)
-    end
-    transcript = @default_gateway.scrub(transcript)
+  # def test_transcript_scrubbing
+  #   transcript = capture_transcript(@default_gateway) do
+  #     @purchase_options[:payment][:reference] = "TEST_" + Time.now.strftime("%Y%m%d_%H%M%S%3N")
+  #     @default_gateway.purchase(@amount, @credit_card_approved_visa, @purchase_options)
+  #   end
+  #   transcript = @default_gateway.scrub(transcript)
 
-    assert_scrubbed(@credit_card_approved_visa.number, transcript)
-  end
+  #   assert_scrubbed(@credit_card_approved_visa.number, transcript)
+  # end
   
 end

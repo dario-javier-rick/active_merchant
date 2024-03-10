@@ -29,21 +29,47 @@ module ActiveMerchant #:nodoc:
         add_payer(post, options)
         add_payment(post, options)
 
-        _3dsResponse = add_3d_secure(post, payment, options);
+        if(options[:use3ds])
+          _3dsResponse = add_3d_secure(post, payment, options)
 
-        options[:identifier] = JSON.parse(_3dsResponse.params.to_json, object_class: OpenStruct).data.identifier;
-        options[:sessionToken] = JSON.parse(_3dsResponse.params.to_json, object_class: OpenStruct).data.sessionToken;
+          puts '_3dsResponse'
+          puts JSON.parse(_3dsResponse.params.to_json, object_class: OpenStruct).data.inspect
+  
+          options[:identifier] = JSON.parse(_3dsResponse.params.to_json, object_class: OpenStruct).data.identifier;
+          options[:sessionToken] = JSON.parse(_3dsResponse.params.to_json, object_class: OpenStruct).data.sessionToken;  
+        end
 
         add_instrument(post, payment, options)
         commit(:post, 'gateway/process', post)
       end
+
+      # def authorize(money, payment, options = {})
+      #   #Vamos a usar Pre_Auth para el Auth de Spreedly
+      #   post = {}
+      #   post[:action] = "pre_authorization"
+      #   add_auth(post, options)
+      #   add_payer(post, options)
+      #   add_payment(post, options)
+      #   add_instrument(post, payment, options)
+      #   commit(:post, 'gateway/process', post)
+      # end
+
+      def capture(money, authorization, options = {})
+        #Vamos a usar Checkout para el Capture de Spreedly
+        post = {}
+        add_auth(post, options)
+        post[:internalReference] = options[:internalReference]
+        post[:authorization] = authorization
+        post[:action] = 'checkout'
+        commit(:post, 'gateway/transaction', post)        
+      end   
 
       def refund(money, authorization, options = {})
         post = {}
         add_auth(post, options)
         post[:internalReference] = options[:internalReference]
         post[:authorization] = authorization                
-        post[:action] = 'reverse' #Allowed values: reverse refund process void dispersion pre_authorization checkin checkout reauthorization 
+        post[:action] = 'reverse'
         commit(:post, 'gateway/transaction', post)
       end
 
@@ -76,13 +102,27 @@ module ActiveMerchant #:nodoc:
         base_url = (test? ? test_url : live_url)
         url = build_url(action, base_url)
 
+        puts "URL: " + url
+
+        puts "Request body: "
+        puts JSON.pretty_generate(parameters) 
+        puts "\n"
+
         begin
+          puts "Entre en begin"
+
           url = (test? ? test_url : live_url) + action.to_s
           rel_path = "#{method}/v1/#{action}"
           response = api_request(method, url, rel_path, parameters)
 
         rescue ResponseError => e
+          puts "Entre en rescue"
+          puts e.inspect
+
           raw_response = e.response.body
+
+          puts e.response
+
           response = parse(raw_response)
         end
 
@@ -156,7 +196,7 @@ module ActiveMerchant #:nodoc:
         post[:instrument][:card][:cvv] = payment.verification_value; 
 
         post[:instrument][:threeDS] = {}
-        #post[:instrument][:threeDS][:id] = options[:sessionToken]
+        post[:instrument][:threeDS][:id] = options[:sessionToken]
         
       end
 
@@ -165,10 +205,8 @@ module ActiveMerchant #:nodoc:
         add_auth(post, options)
         add_payment(post, options)
         add_instrument(post, payment, options)
-        post[:returnUrl] = "https://www.your-site.com/return?reference=1234567890"
-        #@response = commit(:post, 'gateway/mpi/lookup', post)
+        post[:returnUrl] = options[:returnUrl]
         commit(:post, 'gateway/mpi/lookup', post)
-        # return @response
       end
 
       def add_amount(post, payment, options)
@@ -203,9 +241,25 @@ module ActiveMerchant #:nodoc:
 
       def api_request(method, url, rel_path, params)
         params == {} ? body = '' : body = params.to_json
+
         raw_response = ssl_request(method, url, body, request_headers())
+        puts "Raw response: "
+        puts JSON.pretty_generate(raw_response)
+        puts "\n"
+
         response = parse(raw_response)
-        
+
+        # puts "Request Url: "
+        # puts url
+
+        # puts "Request body: "
+        # puts JSON.pretty_generate(params)
+        # puts "\n"
+
+        puts "Response: "
+        puts JSON.pretty_generate(response)
+        puts "\n"
+
         return response
       end
 

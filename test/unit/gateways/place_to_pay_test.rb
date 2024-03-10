@@ -2,8 +2,9 @@ require 'test_helper'
 
 class PlaceToPayTest < Test::Unit::TestCase
   include CommStub
+
   def setup
-    @gateway = PlaceToPayGateway.new(login: 'login', secret_key: 'secret_key')
+    @gateway = PlaceToPayGateway.new(login: '11caf20f5cd408c9b22c7f0693e2f676', secret_key: 'yLb0x2IO2lO65zq7')
     
     @amount = 100
 

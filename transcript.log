@@ -1,0 +1,50 @@
+opening connection to api-co-dev.placetopay.ws:443...
+opened
+starting SSL for api-co-dev.placetopay.ws:443...
+SSL established, protocol: TLSv1.3, cipher: TLS_AES_128_GCM_SHA256
+<- "POST /gateway/mpi/lookup HTTP/1.1\r\nContent-Type: application/json\r\nConnection: close\r\nAccept-Encoding: gzip;q=1.0,deflate;q=0.6,identity;q=0.3\r\nAccept: */*\r\nUser-Agent: Ruby\r\nHost: api-co-dev.placetopay.ws\r\nContent-Length: 547\r\n\r\n"
+<- "{\"auth\":{\"login\":\"11caf20f5cd408c9b22c7f0693e2f676\",\"tranKey\":\"UZXYFx6KRPDvs1Ix/sZStynxVovHVUwEqUR57wfAqJ8=\",\"seed\":\"2024-03-08T12:48:43-03:00\",\"nonce\":\"NDVjNDhjY2UyZTJkN2ZiZGVhMWFmYzUxYzdjNmFkMjY=\"},\"payment\":{\"description\":\"Cum vitae et consequatur quas adipisci ut rem.\",\"amount\":{\"currency\":\"COP\",\"total\":100},\"reference\":\"TEST_20240308_124843676\"},\"instrument\":{\"card\":{\"installments\":1,\"number\":\"4110760000000081\",\"expiration\":\"12/2023\",\"cvv\":\"123\"},\"threeDS\":{\"id\":null}},\"returnUrl\":\"https://www.your-site.com/return?reference=1234567890\"}"
+-> "HTTP/1.1 200 OK\r\n"
+-> "Content-Type: application/json\r\n"
+-> "Content-Length: 409\r\n"
+-> "Connection: close\r\n"
+-> "Date: Fri, 08 Mar 2024 15:48:44 GMT\r\n"
+-> "x-amzn-RequestId: 61d18932-d2bf-4067-8aba-637b7cf9e92a\r\n"
+-> "x-amz-apigw-id: UUT2WHnBIAMEkXg=\r\n"
+-> "Cache-Control: no-cache, private\r\n"
+-> "X-Amzn-Trace-Id: Root=1-65eb335b-277c594f790151605aabc166;Parent=2bec9089ca3c0301;Sampled=0;lineage=8286a572:0\r\n"
+-> "x-amzn-Remapped-Date: Fri, 08 Mar 2024 15:48:44 GMT\r\n"
+-> "X-Cache: Miss from cloudfront\r\n"
+-> "Via: 1.1 8d0b9f2e2722328705d4b81407b9578a.cloudfront.net (CloudFront)\r\n"
+-> "X-Amz-Cf-Pop: EZE50-P4\r\n"
+-> "X-Amz-Cf-Id: dEwDLZRqCghlRw7hDaUIh-fhYA2FtiHkbg0IxankVd_Udy21gHzfkw==\r\n"
+-> "\r\n"
+reading 409 bytes...
+-> "{\"status\":{\"status\":\"OK\",\"reason\":\"00\",\"message\":\"La petici\\u00f3n se ha procesado correctamente\",\"date\":\"2024-03-08T10:48:44-05:00\"},\"data\":{\"version\":\"v2\",\"sessionToken\":\"92287019477261df59afc6db183bb8c5168280c8644b878200e7073f0f1b7362\",\"redirectUrl\":\"https:\\/\\/3dss-test.placetopay.com\\/threeds\\/v2\\/sessions\\/69585\\/92287019477261df59afc6db183bb8c5168280c8644b878200e7073f0f1b7362\",\"identifier\":\"140669\"}}"
+read 409 bytes
+Conn close
+opening connection to api-co-dev.placetopay.ws:443...
+opened
+starting SSL for api-co-dev.placetopay.ws:443...
+SSL established, protocol: TLSv1.3, cipher: TLS_AES_128_GCM_SHA256
+<- "POST /gateway/process HTTP/1.1\r\nContent-Type: application/json\r\nConnection: close\r\nAccept-Encoding: gzip;q=1.0,deflate;q=0.6,identity;q=0.3\r\nAccept: */*\r\nUser-Agent: Ruby\r\nHost: api-co-dev.placetopay.ws\r\nContent-Length: 683\r\n\r\n"
+<- "{\"auth\":{\"login\":\"11caf20f5cd408c9b22c7f0693e2f676\",\"tranKey\":\"0TCeD2wObLnJmmJMAflYR3nPbgLwYbcq5OCsS6T7aCI=\",\"seed\":\"2024-03-08T12:48:43-03:00\",\"nonce\":\"MTY3OTA5MWM1YTg4MGZhZjZmYjVlNjA4N2ViMWIyZGM=\"},\"payer\":{\"name\":\"Erika\",\"surname\":\"Howe\",\"email\":\"cwilliamson@hotmail.com\",\"documentType\":\"CC\",\"document\":\"3572264088\",\"mobile\":\"3006108300\"},\"payment\":{\"description\":\"Cum vitae et consequatur quas adipisci ut rem.\",\"amount\":{\"currency\":\"COP\",\"total\":100},\"reference\":\"TEST_20240308_124843676\"},\"instrument\":{\"card\":{\"installments\":1,\"number\":\"4110760000000081\",\"expiration\":\"12/2023\",\"cvv\":\"123\"},\"threeDS\":{\"id\":\"92287019477261df59afc6db183bb8c5168280c8644b878200e7073f0f1b7362\"}}}"
+-> "HTTP/1.1 200 OK\r\n"
+-> "Content-Type: application/json\r\n"
+-> "Content-Length: 982\r\n"
+-> "Connection: close\r\n"
+-> "Date: Fri, 08 Mar 2024 15:48:45 GMT\r\n"
+-> "x-amzn-RequestId: 125c11ea-4ef9-4574-b208-b284d78d4102\r\n"
+-> "x-amz-apigw-id: UUT2fFhQIAMERHA=\r\n"
+-> "Cache-Control: no-cache, private\r\n"
+-> "X-Amzn-Trace-Id: Root=1-65eb335c-007b729327a8536e4574719b;Parent=5e372432a09859fa;Sampled=0;lineage=8286a572:0\r\n"
+-> "x-amzn-Remapped-Date: Fri, 08 Mar 2024 15:48:45 GMT\r\n"
+-> "X-Cache: Miss from cloudfront\r\n"
+-> "Via: 1.1 78952aa2602858f0c8fbb8434a258486.cloudfront.net (CloudFront)\r\n"
+-> "X-Amz-Cf-Pop: EZE50-P4\r\n"
+-> "X-Amz-Cf-Id: 0fPCbbq1q-IAwDEw3_MmOgIMG3BDHIWywmf2gpWueYfkOTJeg4Xu1g==\r\n"
+-> "\r\n"
+reading 982 bytes...
+-> "{\"status\":{\"status\":\"APPROVED\",\"reason\":\"00\",\"message\":\"Aprobada\",\"date\":\"2024-03-08T10:48:45-05:00\"},\"date\":\"2024-03-08T10:48:44-05:00\",\"transactionDate\":\"2024-03-08T10:48:44-05:00\",\"internalReference\":433480,\"reference\":\"TEST_20240308_124843676\",\"paymentMethod\":\"ID_VS\",\"franchise\":\"visa\",\"franchiseName\":\"Visa\",\"issuerName\":\"BANCO DE GUAYAQUIL, S.A.\",\"amount\":{\"currency\":\"COP\",\"total\":100},\"conversion\":{\"from\":{\"currency\":\"COP\",\"total\":100},\"to\":{\"currency\":\"USD\",\"total\":0.03},\"factor\":0.000256},\"authorization\":\"999999\",\"receipt\":\"433480\",\"type\":\"AUTH_ONLY\",\"refunded\":false,\"lastDigits\":\"0081\",\"provider\":\"INTERDIN\",\"discount\":null,\"processorFields\":{\"id\":\"3aaa941a33706a4719e25817164e0aab\",\"b24\":\"00\"},\"additional\":{\"merchantCode\":\"12345678\",\"terminalNumber\":\"12345678\",\"credit\":{\"code\":1,\"type\":\"00\",\"groupCode\":\"C\",\"installments\":1},\"totalAmount\":0.03,\"interestAmount\":0,\"installmentAmount\":0.03,\"iceAmount\":0,\"batch\":null,\"line\":null,\"bin\":\"411076\",\"expiration\":\"1223\"}}"
+read 982 bytes
+Conn close
